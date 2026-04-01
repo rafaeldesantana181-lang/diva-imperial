@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Método Diva Imperial</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p1:#8B5CF6;--p2:#A78BFA;--p3:#C4B5FD;--p4:#6D28D9;--p5:#4C1D95;
+  --b1:#3B82F6;--b2:#60A5FA;--b3:#93C5FD;
+  --bg:#04020F;--bg2:#080418;--bg3:#0D0626;--bg4:#120830;
+  --w1:#F5F3FF;--w2:#DDD6FE;--w3:#9CA3AF;--w4:#374151;
+  --glass:rgba(139,92,246,.08);--glassBorder:rgba(139,92,246,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--w1);overflow-x:hidden}
+
+/* ── COSMIC CANVAS ── */
+#cosmos{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── PAGES ── */
+.page{display:none;min-height:100vh;position:relative;z-index:1}
+.page.active{display:flex}
+
+/* ════════════════════════════════
+   LOGIN
+════════════════════════════════ */
+#login-page{align-items:center;justify-content:center;padding:1.5rem;flex-direction:column}
+
+.login-wrap{width:100%;max-width:400px;opacity:0;animation:riseUp 1s cubic-bezier(.16,1,.3,1) .2s forwards}
+@keyframes riseUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+
+/* Crown */
+.crown-zone{display:flex;justify-content:center;margin-bottom:1.5rem;perspective:600px}
+.crown-wrap{position:relative;width:120px;height:120px;cursor:pointer;transition:transform .1s}
+.crown-wrap:hover .crown-aura{opacity:1;transform:scale(1.3)}
+.crown-wrap:hover #crown-svg{filter:drop-shadow(0 0 20px var(--p1)) drop-shadow(0 0 40px var(--b1))}
+.crown-wrap:active{transform:scale(.95)}
+
+#crown-svg{width:120px;height:120px;animation:crownPulse 3s ease-in-out infinite;transition:filter .3s}
+@keyframes crownPulse{
+  0%,100%{filter:drop-shadow(0 0 6px var(--p2)) drop-shadow(0 0 12px var(--p4))}
+  50%{filter:drop-shadow(0 0 20px var(--p1)) drop-shadow(0 0 40px var(--b1)) drop-shadow(0 0 60px var(--p3))}
+}
+.crown-aura{position:absolute;inset:-20px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,.15),transparent 70%);opacity:.4;transition:all .4s;pointer-events:none;animation:auraBreath 3s ease-in-out infinite}
+@keyframes auraBreath{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.6;transform:scale(1.15)}}
+
+/* Crown hover rotation */
+.crown-wrap{transform-style:preserve-3d}
+.crown-wrap.spinning #crown-svg{animation:spin3d .8s cubic-bezier(.16,1,.3,1) forwards,crownPulse 3s ease-in-out infinite .8s}
+@keyframes spin3d{0%{transform:rotateY(0)}50%{transform:rotateY(180deg) scale(1.1)}100%{transform:rotateY(360deg)}}
+
+/* Brand */
+.login-brand{text-align:center;margin-bottom:1.8rem}
+.lb-sub{font-size:.6rem;font-weight:600;letter-spacing:.5em;color:var(--p2);text-transform:uppercase;margin-bottom:.3rem}
+.lb-main{font-size:3.5rem;font-weight:700;line-height:.95;letter-spacing:-.02em;background:linear-gradient(135deg,var(--w1),var(--p3),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:gradShift 4s ease-in-out infinite}
+@keyframes gradShift{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(20deg)}}
+.lb-tag{font-size:.7rem;font-weight:500;letter-spacing:.3em;color:var(--p2);text-transform:uppercase;margin-top:.4rem}
+
+/* Divider */
+.cosmo-line{height:1px;margin:1.2rem 0;position:relative;overflow:hidden;background:linear-gradient(90deg,transparent,var(--p4),var(--b1),var(--p4),transparent)}
+.cosmo-line::after{content:'';position:absolute;top:0;left:-100%;width:50%;height:100%;background:linear-gradient(90deg,transparent,white,transparent);animation:lineShine 3s ease-in-out infinite}
+@keyframes lineShine{0%{left:-50%}100%{left:150%}}
+
+.login-tag{font-size:.82rem;font-weight:400;color:var(--p3);text-align:center;letter-spacing:.08em;margin-bottom:1.8rem;font-style:italic}
+
+/* Glass card */
+.glass-card{background:var(--glass);border:1px solid var(--glassBorder);border-radius:16px;padding:1.8rem;position:relative;overflow:hidden;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+.glass-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,.1),transparent 50%,rgba(59,130,246,.05));pointer-events:none}
+.glass-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--p2),var(--b2),var(--p2),transparent)}
+
+.fl{display:block;font-size:.62rem;font-weight:600;letter-spacing:.3em;color:var(--p2);text-transform:uppercase;margin-bottom:.45rem}
+.fi{width:100%;background:rgba(13,6,38,.7);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:.8rem 1rem;color:var(--w1);font-family:'Space Grotesk',sans-serif;font-size:.9rem;margin-bottom:1.1rem;outline:none;transition:all .3s}
+.fi:focus{border-color:var(--p1);box-shadow:0 0 0 3px rgba(139,92,246,.15),0 0 20px rgba(139,92,246,.1)}
+.fi::placeholder{color:var(--w4)}
+
+.lerr{color:#F87171;font-size:.72rem;text-align:center;margin-bottom:.8rem;display:none}
+
+.btn-cosmic{width:100%;background:linear-gradient(135deg,var(--p4),var(--p1),var(--b1));background-size:200% auto;border:none;border-radius:10px;padding:.95rem;color:white;font-family:'Space Grotesk',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .4s;position:relative;overflow:hidden}
+.btn-cosmic::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--b1),var(--p1),var(--p4));opacity:0;transition:opacity .4s}
+.btn-cosmic:hover{background-position:right center;transform:translateY(-2px);box-shadow:0 10px 30px rgba(139,92,246,.4),0 0 60px rgba(59,130,246,.2)}
+.btn-cosmic:hover::before{opacity:1}
+.btn-cosmic:active{transform:translateY(0)}
+.btn-cosmic span{position:relative;z-index:1}
+
+.lfoot{text-align:center;margin-top:1.2rem;font-size:.6rem;color:var(--w4);letter-spacing:.15em}
+
+/* ════════════════════════════════
+   DASHBOARD
+════════════════════════════════ */
+#dash-page{flex-direction:column}
+
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.8rem;background:rgba(4,2,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(139,92,246,.15);position:sticky;top:0;z-index:100}
+.tb-left{display:flex;align-items:center;gap:.6rem}
+.tb-crown{font-size:1.4rem;animation:microPulse 3s ease-in-out infinite}
+@keyframes microPulse{0%,100%{filter:drop-shadow(0 0 4px var(--p1))}50%{filter:drop-shadow(0 0 12px var(--p2)) drop-shadow(0 0 20px var(--b1))}}
+.tb-name{font-size:1.1rem;font-weight:700;letter-spacing:-.01em}
+.tb-name b{background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-right{display:flex;align-items:center;gap:1rem}
+.tb-tag{font-size:.75rem;font-style:italic;color:var(--p3);display:none}
+@media(min-width:560px){.tb-tag{display:block}}
+.btn-ghost{background:transparent;border:1px solid rgba(139,92,246,.3);border-radius:8px;padding:.35rem .8rem;color:var(--w3);font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .25s}
+.btn-ghost:hover{border-color:var(--p1);color:var(--p2);box-shadow:0 0 12px rgba(139,92,246,.2)}
+
+/* Hero */
+.hero{padding:3rem 2rem 1.5rem;max-width:680px;margin:0 auto;text-align:center;animation:riseUp .8s ease forwards}
+.hero-eye{font-size:.6rem;font-weight:600;letter-spacing:.4em;color:var(--p2);text-transform:uppercase;margin-bottom:.6rem}
+.hero h1{font-size:clamp(1.6rem,4.5vw,2.5rem);font-weight:700;line-height:1.15;margin-bottom:.8rem;letter-spacing:-.02em}
+.hero h1 em{background:linear-gradient(135deg,var(--p2),var(--b2),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;animation:gradShift 4s ease-in-out infinite}
+.hero p{font-size:.85rem;color:var(--w3);line-height:1.85;max-width:420px;margin:0 auto}
+
+/* Tracker */
+.tracker{max-width:680px;margin:0 auto;padding:1.5rem 2rem 1rem;animation:riseUp .8s ease .1s both}
+.tr-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.tr-lbl{font-size:.58rem;font-weight:600;letter-spacing:.3em;color:var(--p4);text-transform:uppercase}
+.tr-cnt{font-size:.72rem;color:var(--p2);font-weight:600}
+.tr-dots{display:flex;gap:5px;flex-wrap:wrap}
+.dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--w4);display:flex;align-items:center;justify-content:center;font-size:.55rem;font-weight:700;color:var(--w4);cursor:pointer;transition:all .3s;user-select:none}
+.dot:hover{border-color:var(--p1);color:var(--p2);box-shadow:0 0 10px rgba(139,92,246,.3)}
+.dot.done{background:linear-gradient(135deg,var(--p4),var(--p1));border-color:var(--p1);color:white;transform:scale(1.1);box-shadow:0 0 14px rgba(139,92,246,.5)}
+.dot.now{border-color:var(--b1);color:var(--b2);animation:nowCosmic 2s ease-in-out infinite}
+@keyframes nowCosmic{0%,100%{box-shadow:0 0 0 3px rgba(59,130,246,.15),0 0 15px rgba(59,130,246,.2)}50%{box-shadow:0 0 0 5px rgba(59,130,246,.25),0 0 30px rgba(139,92,246,.4)}}
+
+/* Module cards */
+.mods{max-width:680px;margin:0 auto;padding:1rem 2rem 4rem;animation:riseUp .8s ease .2s both}
+.mods-lbl{font-size:.58rem;font-weight:600;letter-spacing:.3em;color:var(--p4);text-transform:uppercase;text-align:center;margin-bottom:1.3rem}
+.mods-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+
+.mcard{background:var(--glass);border:1px solid rgba(109,40,217,.25);border-radius:16px;padding:1.8rem 1.5rem;cursor:pointer;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden;backdrop-filter:blur(12px)}
+.mcard::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,.08),rgba(59,130,246,.04));opacity:0;transition:opacity .4s}
+.mcard::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--p1),var(--b1),var(--p1),transparent);transform:scaleX(0);transform-origin:center;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.mcard:hover{border-color:rgba(139,92,246,.6);transform:translateY(-6px) scale(1.01);box-shadow:0 20px 50px rgba(139,92,246,.2),0 0 40px rgba(59,130,246,.08),inset 0 1px 0 rgba(255,255,255,.05)}
+.mcard:hover::before{opacity:1}
+.mcard:hover::after{transform:scaleX(1)}
+.mcard:hover .mc-icon{animation:iconBounce .5s cubic-bezier(.16,1,.3,1) forwards}
+.mcard:hover .mc-title{background:linear-gradient(135deg,var(--w1),var(--p3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes iconBounce{0%{transform:scale(1) rotate(0)}30%{transform:scale(1.3) rotate(-10deg)}60%{transform:scale(.95) rotate(5deg)}100%{transform:scale(1.1) rotate(0)}}
+.mcard:active{transform:translateY(-2px) scale(.99)}
+
+.mc-icon{font-size:2rem;margin-bottom:1rem;display:block;transition:all .3s;filter:drop-shadow(0 0 8px rgba(139,92,246,.3))}
+.mc-num{font-size:.52rem;font-weight:600;letter-spacing:.35em;color:var(--p4);text-transform:uppercase;margin-bottom:.3rem}
+.mc-title{font-size:1.3rem;font-weight:700;color:var(--w1);margin-bottom:.45rem;line-height:1.2;letter-spacing:-.01em;transition:all .3s}
+.mc-desc{font-size:.78rem;color:var(--w3);line-height:1.75;margin-bottom:1.1rem}
+.mc-badge{display:inline-flex;align-items:center;gap:.4rem;background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);border-radius:20px;padding:.22rem .7rem;font-size:.58rem;font-weight:600;letter-spacing:.15em;color:var(--p2);text-transform:uppercase;transition:all .3s}
+.mcard:hover .mc-badge{background:rgba(139,92,246,.2);border-color:var(--p1);box-shadow:0 0 10px rgba(139,92,246,.2)}
+.mc-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--p1);animation:dotPulse 2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+
+/* ════════════════════════════════
+   CONTENT
+════════════════════════════════ */
+#content-page{flex-direction:column}
+.cbar{display:flex;align-items:center;gap:1rem;padding:1rem 1.8rem;background:rgba(4,2,15,.92);backdrop-filter:blur(20px);border-bottom:1px solid rgba(139,92,246,.15);position:sticky;top:0;z-index:100}
+.cbar-title{font-size:1rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cmain{max-width:720px;margin:0 auto;padding:2.5rem 2rem 5rem;animation:riseUp .5s ease forwards}
+
+/* Tabs */
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid rgba(139,92,246,.1)}
+.tab{background:transparent;border:1px solid rgba(139,92,246,.2);border-radius:20px;padding:.4rem .9rem;color:var(--w3);font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.tab:hover{border-color:var(--p1);color:var(--p2);box-shadow:0 0 12px rgba(139,92,246,.2)}
+.tab.on{background:rgba(139,92,246,.15);border-color:var(--p1);color:var(--p2);box-shadow:0 0 16px rgba(139,92,246,.25)}
+.tc{display:none;animation:tabIn .35s cubic-bezier(.16,1,.3,1) forwards}.tc.on{display:block}
+@keyframes tabIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Content elements */
+.p-intro{margin-bottom:2.5rem}
+.eyebrow{font-size:.58rem;font-weight:600;letter-spacing:.4em;color:var(--p4);text-transform:uppercase;margin-bottom:.4rem}
+.big-t{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.4rem;letter-spacing:-.02em}
+.sub-d{font-size:.68rem;color:var(--w3);letter-spacing:.2em;text-transform:uppercase;margin-bottom:1rem}
+.intro-p{font-size:.98rem;font-style:italic;color:var(--p3);line-height:1.9;font-weight:300}
+
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--p4) 30%,var(--b1) 50%,var(--p4) 70%,transparent);margin:1.8rem 0;opacity:.5}
+
+.sh{font-size:.58rem;font-weight:600;letter-spacing:.35em;color:var(--p2);text-transform:uppercase;margin-bottom:1.3rem}
+
+.rule{border-left:2px solid rgba(139,92,246,.4);padding:.1rem 0 .1rem 1.1rem;margin-bottom:1.4rem;transition:all .3s}
+.rule:hover{border-color:var(--p1);padding-left:1.4rem}
+.rule-t{font-weight:600;font-size:.85rem;color:var(--p3);margin-bottom:.25rem}
+.rule-b{font-size:.85rem;color:var(--w1);line-height:1.75;margin-bottom:.2rem}
+.rule-r{font-size:.78rem;font-style:italic;color:var(--w3);line-height:1.6}
+
+.rblock{background:var(--glass);border:1px solid rgba(139,92,246,.12);border-radius:12px;padding:1.3rem;margin-bottom:.9rem;transition:all .3s;backdrop-filter:blur(8px)}
+.rblock:hover{border-color:rgba(139,92,246,.3);box-shadow:0 8px 24px rgba(139,92,246,.1)}
+.rb-t{font-weight:700;font-size:.8rem;color:var(--p2);margin-bottom:.8rem;letter-spacing:.03em}
+.ri{font-size:.83rem;color:var(--w1);line-height:1.75;padding-left:1rem;position:relative;margin-bottom:.3rem}
+.ri::before{content:'✦';position:absolute;left:0;color:var(--p1);font-size:.5rem;top:.35rem}
+.rr{font-size:.76rem;font-style:italic;color:var(--w3);padding-left:1rem;line-height:1.6;margin-bottom:.7rem}
+
+.sec{display:flex;gap:.9rem;margin-bottom:1.4rem;align-items:flex-start}
+.sec-n{font-size:1.8rem;font-weight:700;color:rgba(139,92,246,.2);line-height:1;min-width:28px;text-align:center;letter-spacing:-.03em}
+.sec-t{font-weight:700;font-size:.85rem;color:var(--p3);margin-bottom:.25rem}
+.sec-b{font-size:.83rem;color:var(--w2);line-height:1.75}
+
+.quote{background:rgba(139,92,246,.07);border-left:3px solid var(--p1);padding:1rem 1.3rem;border-radius:0 12px 12px 0;margin:1.5rem 0;backdrop-filter:blur(8px)}
+.quote p{font-size:1rem;font-style:italic;color:var(--p3);line-height:1.85;font-weight:300}
+
+.day{background:var(--glass);border:1px solid rgba(139,92,246,.1);border-radius:12px;padding:1.3rem;margin-bottom:1.3rem;transition:all .3s;backdrop-filter:blur(8px)}
+.day:hover{border-color:rgba(139,92,246,.35);box-shadow:0 8px 24px rgba(139,92,246,.1)}
+.day-t{font-size:1.05rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.9rem;padding-bottom:.6rem;border-bottom:1px solid rgba(139,92,246,.15)}
+.meal{margin-bottom:.75rem}
+.ml{font-size:.58rem;font-weight:600;letter-spacing:.25em;color:var(--p4);text-transform:uppercase;margin-bottom:.18rem}
+.mf{font-size:.88rem;color:var(--w1);line-height:1.55;margin-bottom:.18rem}
+.mr{font-size:.75rem;font-style:italic;color:var(--w3);line-height:1.55}
+
+.ali-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+@media(max-width:480px){.ali-grid{grid-template-columns:1fr}}
+.ali{background:var(--glass);border:1px solid rgba(139,92,246,.12);border-radius:12px;padding:1.1rem;backdrop-filter:blur(8px)}
+.ali h4{font-size:.6rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;margin-bottom:.7rem;padding-bottom:.5rem;border-bottom:1px solid rgba(139,92,246,.1)}
+.ali.c h4{color:#4ADE80}.ali.e h4{color:#F87171}
+.ali ul{list-style:none}
+.ali li{font-size:.82rem;color:var(--w2);line-height:1.85;padding-left:.9rem;position:relative}
+.ali.c li::before{content:'✓';position:absolute;left:0;color:#4ADE80;font-size:.7rem}
+.ali.e li::before{content:'✕';position:absolute;left:0;color:#F87171;font-size:.7rem}
+
+.recipe{background:var(--glass);border:1px solid rgba(139,92,246,.14);border-radius:12px;padding:1.4rem;margin-bottom:1.4rem;transition:all .3s;backdrop-filter:blur(8px)}
+.recipe:hover{border-color:rgba(139,92,246,.4);box-shadow:0 8px 24px rgba(139,92,246,.12)}
+.rname{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.15rem}
+.rtag{font-size:.75rem;font-style:italic;color:var(--p3);margin-bottom:.9rem}
+.rsl{font-size:.58rem;font-weight:600;letter-spacing:.25em;color:var(--p4);text-transform:uppercase;margin-bottom:.35rem;margin-top:.7rem}
+.recipe p{font-size:.85rem;color:var(--w2);line-height:1.7}
+.rwhy{font-size:.78rem;font-style:italic;color:var(--w3);line-height:1.6;margin-top:.7rem;padding-top:.7rem;border-top:1px solid rgba(139,92,246,.1)}
+
+.ex{background:var(--glass);border:1px solid rgba(139,92,246,.1);border-radius:12px;padding:1.1rem 1.3rem;margin-bottom:.8rem;transition:all .3s;backdrop-filter:blur(8px)}
+.ex:hover{border-color:rgba(139,92,246,.35);box-shadow:0 6px 20px rgba(139,92,246,.1)}
+.ex-n{font-weight:700;font-size:.85rem;color:var(--p3);margin-bottom:.35rem}
+.ex-r{font-size:.7rem;color:var(--b2);font-weight:600;margin-bottom:.3rem;letter-spacing:.1em}
+.ex-h{font-size:.82rem;color:var(--w1);line-height:1.65;margin-bottom:.25rem}
+.ex-f{font-size:.75rem;font-style:italic;color:var(--p3);margin-bottom:.2rem}
+.ex-d{font-size:.7rem;color:var(--w4)}
+
+.cal{width:100%;border-collapse:collapse;margin-bottom:1.8rem;border-radius:12px;overflow:hidden}
+.cal th{background:linear-gradient(135deg,var(--p5),var(--p4));color:var(--w1);font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding:.55rem 1rem;text-align:left}
+.cal td{padding:.55rem 1rem;font-size:.85rem;border-bottom:1px solid rgba(139,92,246,.08)}
+.cal tr:last-child td{border:none}
+.cal tr:nth-child(even) td{background:rgba(139,92,246,.03)}
+.cal .dn{color:var(--w3);font-weight:600;font-size:.8rem}
+.cal .tn{color:var(--w1)}
+.cal .rst{color:var(--w4);font-style:italic}
+
+.tw-h{text-align:center;margin-bottom:2rem}
+.tw-l{font-size:.58rem;font-weight:600;letter-spacing:.35em;color:var(--p4);text-transform:uppercase;margin-bottom:.3rem}
+.tw-t{font-size:1.7rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.3rem}
+.tw-d{font-size:.78rem;color:var(--w3)}
+.tn-name{font-size:1.3rem;font-weight:700;background:linear-gradient(135deg,var(--p2),var(--b2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;margin:2rem 0 .25rem}
+.tn-sub{font-size:.7rem;color:var(--w3);text-align:center;font-style:italic;margin-bottom:1.2rem}
+.aq{background:rgba(139,92,246,.06);border-left:2px solid rgba(139,92,246,.4);padding:.8rem 1rem;margin-bottom:1.2rem;border-radius:0 8px 8px 0}
+.aq-t{font-size:.6rem;font-weight:600;letter-spacing:.3em;color:var(--p2);text-transform:uppercase;margin-bottom:.4rem}
+.aq p{font-size:.82rem;color:var(--w2);line-height:1.7}
+
+/* Bottom glow */
+.bline{position:fixed;bottom:0;left:0;right:0;height:1px;z-index:999;pointer-events:none;background:linear-gradient(90deg,transparent,var(--p1),var(--b1),var(--p1),transparent);animation:blinePulse 4s ease-in-out infinite}
+@keyframes blinePulse{0%,100%{opacity:.3}50%{opacity:.9}}
+</style>
+</head>
+<body>
+<canvas id="cosmos"></canvas>
+<div class="bline"></div>
+
+<!-- LOGIN -->
+<div id="login-page" class="page active">
+<div class="login-wrap">
+  <div class="crown-zone">
+    <div class="crown-wrap" id="crownWrap">
+      <div class="crown-aura"></div>
+      <svg id="crown-svg" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#C4B5FD"/>
+            <stop offset="100%" stop-color="#7C3AED"/>
+          </radialGradient>
+          <radialGradient id="cg2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#93C5FD"/>
+            <stop offset="100%" stop-color="#3B82F6"/>
+          </radialGradient>
+          <radialGradient id="cg3" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#E9D5FF"/>
+            <stop offset="60%" stop-color="#A78BFA"/>
+            <stop offset="100%" stop-color="#5B21B6"/>
+          </radialGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Base -->
+        <rect x="15" y="75" width="90" height="16" rx="4" fill="url(#cg3)" filter="url(#glow)"/>
+        <!-- Crown body -->
+        <path d="M15 78 L15 50 L35 68 L60 30 L85 68 L105 50 L105 78 Z" fill="url(#cg3)" filter="url(#glow)"/>
+        <!-- Shine lines -->
+        <path d="M15 78 L15 50 L35 68 L60 30 L85 68 L105 50 L105 78 Z" fill="none" stroke="rgba(255,255,255,.3)" stroke-width=".8"/>
+        <!-- Center orb -->
+        <circle cx="60" cy="28" r="8" fill="url(#cg2)" filter="url(#glow)"/>
+        <circle cx="60" cy="28" r="4" fill="white" opacity=".6"/>
+        <!-- Side orbs -->
+        <circle cx="15" cy="50" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
+        <circle cx="15" cy="50" r="2.5" fill="white" opacity=".5"/>
+        <circle cx="105" cy="50" r="5.5" fill="url(#cg1)" filter="url(#glow)"/>
+        <circle cx="105" cy="50" r="2.5" fill="white" opacity=".5"/>
+        <!-- Mini orbs -->
+        <circle cx="35" cy="68" r="4" fill="url(#cg2)" filter="url(#glow)"/>
+        <circle cx="85" cy="68" r="4" fill="url(#cg2)" filter="url(#glow)"/>
+        <!-- Stars inside -->
+        <path d="M60 42 L61.5 47 L66.5 47 L62.5 50 L64 55 L60 52 L56 55 L57.5 50 L53.5 47 L58.5 47 Z" fill="rgba(255,255,255,.4)"/>
+        <!-- Base shine -->
+        <rect x="15" y="75" width="90" height="4" rx="2" fill="rgba(255,255,255,.15)"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="login-brand">
+    <div class="lb-sub">Método</div>
+    <div class="lb-main">Diva</div>
+    <div class="lb-tag">Imperial ✦</div>
+  </div>
+
+  <div class="cosmo-line"></div>
+  <div class="login-tag">Seu corpo. Sua coroa. 21 dias. ✨</div>
+
+  <div class="glass-card">
+    <label class="fl">✉️ Seu Email</label>
+    <input class="fi" type="email" id="em" placeholder="seuemail@gmail.com">
+    <label class="fl">🔒 Sua Senha</label>
+    <input class="fi" type="password" id="pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')login()">
+    <div class="lerr" id="lerr">❌ Email ou senha incorretos.</div>
+    <button class="btn-cosmic" onclick="login()"><span>✦ Acessar meu programa</span></button>
+  </div>
+  <div class="lfoot">Acesso exclusivo · Método Diva Imperial © 2025</div>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash-page" class="page">
+  <div class="topbar">
+    <div class="tb-left">
+      <span class="tb-crown">👑</span>
+      <span class="tb-name">Diva <b>Imperial</b></span>
+    </div>
+    <div class="tb-right">
+      <span class="tb-tag">✨ Seu corpo. Sua coroa.</span>
+      <button class="btn-ghost" onclick="logout()">Sair</button>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-eye">✦ Bem-vinda ao seu programa</div>
+    <h1>Sua transformação<br><em>começa agora 👑</em></h1>
+    <div class="cosmo-line"></div>
+    <p>Escolha um módulo para começar. Cada dia marcado é um passo mais perto da sua coroa. ✨</p>
+  </div>
+
+  <div class="tracker">
+    <div class="tr-head">
+      <span class="tr-lbl">✦ Jornada de 21 dias</span>
+      <span class="tr-cnt" id="dcnt">0 / 21 dias</span>
+    </div>
+    <div class="tr-dots" id="dots"></div>
+  </div>
+
+  <div class="mods">
+    <div class="mods-lbl">✦ Seus módulos</div>
+    <div class="mods-grid">
+      <div class="mcard" onclick="openMod('protocolo')">
+        <span class="mc-icon">📋</span>
+        <div class="mc-num">Módulo 01</div>
+        <div class="mc-title">Protocolo<br>21 Dias</div>
+        <div class="mc-desc">Três fases de transformação com regras, rotinas e segredos exclusivos para cada semana.</div>
+        <span class="mc-badge">3 Fases · 21 Dias</span>
+      </div>
+      <div class="mcard" onclick="openMod('cardapio')">
+        <span class="mc-icon">🥗</span>
+        <div class="mc-num">Módulo 02</div>
+        <div class="mc-title">Cardápio<br>Anti-Inflamatório</div>
+        <div class="mc-desc">21 dias de refeições com benefícios explicados e 7 receitas que turbinam a transformação.</div>
+        <span class="mc-badge">21 Dias · 7 Receitas</span>
+      </div>
+      <div class="mcard" onclick="openMod('treino')">
+        <span class="mc-icon">🏃‍♀️</span>
+        <div class="mc-num">Módulo 03</div>
+        <div class="mc-title">Treino<br>em Casa</div>
+        <div class="mc-desc">Treino Imperial, Vênus e Rainha. Sem academia. Progressão real em 3 semanas.</div>
+        <span class="mc-badge">3 Treinos · Sem Academia</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content-page" class="page">
+  <div class="cbar">
+    <button class="btn-ghost" onclick="goBack()">← Voltar</button>
+    <div class="cbar-title" id="ctitle">Protocolo 21 Dias</div>
+  </div>
+  <div class="cmain" id="cbody"></div>
+</div>
+
+<script>
+const USERS={'diva@imperial.com':'diva2025','admin@imperial.com':'imperial123'};
+function login(){const e=document.getElementById('em').value.trim().toLowerCase(),p=document.getElementById('pw').value,err=document.getElementById('lerr');if(USERS[e]&&USERS[e]===p){err.style.display='none';showPage('dash-page');buildDots()}else{err.style.display='block';document.getElementById('pw').value=''}}
+function logout(){showPage('login-page')}
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
+function goBack(){showPage('dash-page')}
+function buildDots(){const n=parseInt(localStorage.getItem('diva_d')||'0');document.getElementById('dcnt').textContent=`${n} / 21 dias`;const c=document.getElementById('dots');c.innerHTML='';for(let i=1;i<=21;i++){const d=document.createElement('div');d.className='dot'+(i<=n?' done':i===n+1?' now':'');d.textContent=i;d.onclick=()=>{localStorage.setItem('diva_d',i);buildDots()};c.appendChild(d)}}
+function openMod(m){const t={protocolo:'📋 Protocolo 21 Dias',cardapio:'🥗 Cardápio Anti-Inflamatório',treino:'🏃‍♀️ Treino em Casa'};document.getElementById('ctitle').textContent=t[m];document.getElementById('cbody').innerHTML=getContent(m);showPage('content-page');initTabs()}
+function initTabs(){document.querySelectorAll('.tab').forEach(b=>{b.onclick=function(){const g=this.dataset.g;document.querySelectorAll(`.tab[data-g="${g}"]`).forEach(x=>x.classList.remove('on'));document.querySelectorAll(`.tc[data-g="${g}"]`).forEach(x=>x.classList.remove('on'));this.classList.add('on');const tc=document.querySelector(`.tc[data-g="${g}"][data-t="${this.dataset.t}"]`);tc.classList.add('on');tc.style.animation='none';tc.offsetHeight;tc.style.animation=''}})}
+
+// Crown interaction
+const cw=document.getElementById('crownWrap');
+cw.addEventListener('mouseenter',()=>{cw.classList.add('spinning');setTimeout(()=>cw.classList.remove('spinning'),800)});
+cw.addEventListener('click',()=>{cw.classList.add('spinning');setTimeout(()=>cw.classList.remove('spinning'),800)});
+
+function rule(t,b,r){return`<div class="rule"><div class="rule-t">${t}</div><div class="rule-b">${b}</div><div class="rule-r">Por quê: ${r}</div></div>`}
+function sec(i,t,b){return`<div class="sec"><div class="sec-n">${i}</div><div><div class="sec-t">${t}</div><div class="sec-b">${b}</div></div></div>`}
+function rb(t,items){return`<div class="rblock"><div class="rb-t">${t}</div>${items}</div>`}
+function ri(t){return`<div class="ri">${t}</div>`}
+function rr(t){return`<div class="rr">Por quê: ${t}</div>`}
+function ex(n,r,h,f,d){return`<div class="ex"><div class="ex-n">${n}</div><div class="ex-r">${r}</div><div class="ex-h">${h}</div><div class="ex-f">Foca em: ${f}</div><div class="ex-d">Descanso: ${d}</div></div>`}
+function cal(rows){return`<table class="cal"><thead><tr><th>Dia</th><th>Treino</th></tr></thead><tbody>${rows.map(([d,t])=>`<tr><td class="dn">${d}</td><td class="${t.includes('Descanso')?'rst':'tn'}">${t}</td></tr>`).join('')}</tbody></table>`}
+function dayCard(d){return`<div class="day"><div class="day-t">${d[0]}</div><div class="meal"><div class="ml">☀️ Café</div><div class="mf">${d[1]}</div><div class="mr">Por quê: ${d[2]}</div></div><div class="meal"><div class="ml">🌞 Almoço</div><div class="mf">${d[3]}</div><div class="mr">Por quê: ${d[4]}</div></div><div class="meal"><div class="ml">🍎 Lanche</div><div class="mf">${d[5]}</div><div class="mr">Por quê: ${d[6]}</div></div><div class="meal"><div class="ml">🌙 Jantar</div><div class="mf">${d[7]}</div><div class="mr">Por quê: ${d[8]}</div></div></div>`}
+function getContent(m){if(m==='protocolo')return proto();if(m==='cardapio')return card();if(m==='treino')return train()}
+
+function proto(){return`<div class="tabs"><button class="tab on" data-g="p" data-t="c">⚔️ Compromisso</button><button class="tab" data-g="p" data-t="f1">🌱 Fase 1</button><button class="tab" data-g="p" data-t="f2">🔥 Fase 2</button><button class="tab" data-g="p" data-t="f3">👑 Fase 3</button></div>
+<div class="tc on" data-g="p" data-t="c"><div class="quote"><p>Antes de começar, entenda uma coisa — esse método não é pra qualquer uma. É para a mulher que decidiu que chegou a hora. ✨</p></div><p style="font-size:.88rem;color:var(--w2);line-height:1.8;margin:1rem 0">Se você está aqui, já tomou a decisão mais importante. Agora é só executar.</p><div class="quote"><p>Bem-vinda ao Método Diva Imperial. 👑</p></div></div>
+<div class="tc" data-g="p" data-t="f1"><div class="p-intro"><div class="eyebrow">Fase 1 · Dias 1—7</div><div class="big-t">Reset 🌱</div><div class="intro-p">Imagina acordar daqui 7 dias e perceber que sua barriga está mais flat, seu rosto mais fino e seu corpo mais leve. Não é sonho — é o que acontece quando você dá ao seu corpo o reset que ele sempre precisou.</div></div><div class="divider"></div><div class="sh">As 7 Regras Imperiais do Reset</div>${rule('Regra 1 — Hidratação Soberana 💧','Beba 2,5 litros de água por dia.','Seu corpo não queima gordura sem água — ela carrega as toxinas para fora.')}${rule('Regra 2 — Corte o Inimigo ❌','Elimine açúcar, farinha branca e frituras por 7 dias.','Esses 3 são os maiores responsáveis pelo inchaço.')}${rule('Regra 3 — Durma como uma Rainha 🌙','Durma no mínimo 7 horas por noite.','É durante o sono que seu corpo queima gordura e se regenera.')}${rule('Regra 4 — Movimento Diário 🏃‍♀️','15 minutos de movimento por dia.','O corpo precisa ser ativado para entrar em modo de queima total.')}${rule('Regra 5 — Alimentação no Horário ⏰','Não pule refeições. Coma nos horários certos.','Comer nos horários certos acelera o metabolismo.')}${rule('Regra 6 — Elimine o Estresse 🧘‍♀️','10 minutos de respiração ou meditação por dia.','Estresse produz cortisol — o hormônio que acumula gordura na barriga.')}${rule('Regra 7 — Compromisso Imperial 👑','Siga as regras por 7 dias sem exceção.','Uma Diva Imperial não desiste no primeiro desafio.')}<div class="divider"></div><div class="sh">Rotina Diária</div>${rb('🌅 Manhã Imperial',ri('Água morna com limão em jejum.')+rr('Ativa o metabolismo e desintoxica o fígado.')+ri('Café da Manhã: proteína + fruta + sem açúcar.')+rr('Proteína de manhã acelera o metabolismo e evita compulsão.')+ri('Movimento Matinal: 10 minutos de alongamento ou caminhada leve.'))}${rb('☀️ Tarde Imperial',ri('Almoço: prato colorido — proteína + legumes + carboidrato natural.')+rr('Variedade de cores = variedade de nutrientes = corpo no máximo.')+ri('Lanche: 1 fruta ou punhado de castanhas.')+rr('Mantém o metabolismo ativo e evita compulsão noturna.'))}${rb('🌙 Noite Imperial',ri('Jantar: leve e proteico. Sem carboidrato pesado após as 19h.')+rr('Comida leve = corpo queimando gordura enquanto você dorme.')+ri('Ritual Noturno: desligue as telas 30 min antes. Respire fundo 5 vezes.')+ri('Sono Imperial: durma entre 22h e 23h — mínimo 7 horas.'))}<div class="divider"></div><div class="sh">💎 Segredos Imperiais da Fase 1</div>${[['A Água Turbinada 💧','Adicione gengibre ralado ou hortelã na sua água. Acelera o metabolismo, reduz o inchaço e elimina a vontade de comer doce.'],['O Poder do Jejum Noturno 🌙','Feche a cozinha às 20h. Seu corpo vai queimar gordura por 10-12 horas enquanto você dorme.'],['A Respiração que Emagrece 🧘‍♀️','Antes de cada refeição respire fundo 3 vezes. Reduz o cortisol e faz você comer menos sem perceber.'],['O Truque do Espelho 🪞','Todo dia ao acordar diga uma coisa que você admira no seu corpo. Quem se ama transforma mais rápido.'],['A Caminhada Secreta 🚶‍♀️','10 minutos de caminhada após o jantar queimam mais gordura que 30 min de academia em jejum.'],['O Chá que Desinfla 🍵','Chá de gengibre com canela antes de dormir. Você acorda com o abdômen mais flat.'],['A Regra do Prato Colorido 🌈','Quanto mais cores no prato, mais nutrientes e mais saciedade. Uma Diva come com os olhos primeiro.']].map(([t,b],i)=>sec(i+1,t,b)).join('')}</div>
+<div class="tc" data-g="p" data-t="f2"><div class="p-intro"><div class="eyebrow">Fase 2 · Dias 8—14</div><div class="big-t">Transformação 🔥</div><div class="intro-p">Você chegou até aqui. Isso já diz tudo sobre quem você é. Agora chegou a hora de acelerar — seu corpo vai entrar em modo de queima total.</div></div><div class="divider"></div><div class="sh">As 7 Regras Imperiais da Transformação</div>${rule('Regra 1 — Intensifique a Hidratação 💧','Suba para 3 litros de água por dia.','Seu metabolismo está acelerado — ele precisa de mais combustível.')}${rule('Regra 2 — Proteína em Todas as Refeições 💪','Inclua proteína em cada refeição.','Proteína constrói músculo, músculo queima gordura — mesmo em repouso.')}${rule('Regra 3 — Elimine o Sal Excessivo 🧂','Reduza o sal pela metade.','O sódio retém líquido e infla o abdômen.')}${rule('Regra 4 — Treino em Modo Imperial 🏋️‍♀️','Os treinos sobem para 20 minutos por dia.','Seu corpo já está adaptado e pronto para ir além.')}${rule('Regra 5 — Jejum Inteligente ⏳','Fique 12 horas sem comer entre o jantar e o café.','Simples, poderoso e gratuito.')}${rule('Regra 6 — Elimine os Sabotadores 🚫','Identifique o que te faz sair da dieta e tenha uma estratégia pronta.','Cada sabotador tem uma solução.')}${rule('Regra 7 — Registre sua Transformação 📸','Tire uma foto no espelho a cada 2 dias.','Ver sua própria evolução é o combustível mais poderoso.')}<div class="divider"></div><div class="sh">💎 Segredos Imperiais da Transformação</div>${[['O Jejum da Beleza ✨','Pare de comer 3 horas antes de dormir. Seu corpo queima gordura localizada — principalmente na barriga e nas coxas.'],['A Combinação Proibida 🚫','Nunca misture carboidrato com gordura na mesma refeição. Essa combinação é o que faz a gordura se acumular.'],['O Poder do Frio 🧊','Termine o banho com 30 segundos de água fria. Ativa a gordura marrom que queima as outras gorduras.'],['A Especiaria Imperial 🌶️','Adicione canela em tudo. Regula o açúcar no sangue e elimina a compulsão por doce.'],['O Truque da Mastigação 😋','Mastigue cada garfada 20 vezes. Faz você comer 30% menos e melhora a digestão.'],['A Caminhada Turbinada 🚀','Alterne 1 min rápido com 1 min normal por 15 minutos. Queima 3x mais gordura.'],['O Espelho das Divas 🪞','Observe sua evolução para celebrar — não criticar. Cada centímetro a menos é uma vitória imperial.']].map(([t,b],i)=>sec(i+1,t,b)).join('')}</div>
+<div class="tc" data-g="p" data-t="f3"><div class="p-intro"><div class="eyebrow">Fase 3 · Dias 15—21</div><div class="big-t">Coroação 👑</div><div class="intro-p">Você chegou onde poucas chegam. A diva não está emergindo mais. Ela já chegou. Agora vamos selar sua coroa. ✨</div></div><div class="divider"></div><div class="sh">As 7 Regras Imperiais da Coroação</div>${rule('Regra 1 — Mantenha o Ritmo Imperial 💫','Seu corpo já sabe o caminho — confie nele.','Você já não precisa de força de vontade — você tem um hábito.')}${rule('Regra 2 — Suba o Nível do Treino 🔝','25 minutos de treino por dia.','Seu corpo está pronto para ir além do que você imagina.')}${rule('Regra 3 — Proteína é Sagrada 🥩','Frango, peixe, ovos e iogurte grego — todos os dias.','A proteína vai selar os resultados.')}${rule('Regra 4 — Hidratação Máxima 💧','3,5 litros de água por dia.','A água vai revelar a silhueta escondida embaixo do inchaço.')}${rule('Regra 5 — Elimine o Último Inimigo ⚔️','Identifique o alimento que ainda te sabota e elimine por 7 dias.','Você já provou que consegue — agora vá até o fim.')}${rule('Regra 6 — Durma como uma Rainha 🌙','8 horas de sono obrigatório.','É aqui que seu corpo faz o trabalho final.')}${rule('Regra 7 — Celebre Cada Dia 🎉','Você chegou na fase que 90% das mulheres nunca chegam.','Celebre — não com comida, mas com orgulho.')}<div class="divider"></div><div class="sh">💎 Segredos Imperiais da Coroação</div>${[['O Segredo da Manutenção Eterna ♾️','Após os 21 dias mantenha 3 hábitos: água, sono e proteína.'],['O Poder da Foto Final 📸','Tire sua foto no Dia 21 no mesmo ângulo da foto do Dia 1.'],['A Regra do 80/20 ⚖️','Siga o método 80% do tempo e viva 20%. Diva Imperial não se priva — ela se governa.'],['O Ciclo Imperial 🔄','A cada 3 meses volte para a Fase 1 por 7 dias.'],['O Presente para Você Mesma 🎁','No Dia 21 compre algo para você. Comemore a diva que você se tornou.'],['A Corrente Imperial 🔗','Compartilhe sua transformação. Você pode ser o motivo de alguém começar.'],['Você Nunca Mais Será a Mesma 💫','Esses 21 dias mudaram mais do que seu corpo. Você provou que tem disciplina, força e poder.']].map(([t,b],i)=>sec(i+1,t,b)).join('')}<div class="quote" style="margin-top:2rem"><p>👑 Parabéns, Diva Imperial. Sua coroa está colocada. ✨</p></div></div>`}
+
+function card(){
+const s1=[['DIA 1 🌱','2 ovos mexidos + abacate + água com limão','proteína + gordura boa + desintoxicação desde cedo.','frango grelhado + brócolis no vapor + arroz integral','proteína + anti-inflamatório + energia sem pico de insulina.','1 maçã + castanhas 🍎','fibras + magnésio que reduz cortisol e inchaço.','omelete de espinafre + salada de pepino com azeite','jantar leve permite queima de gordura durante o sono.'],['DIA 2','iogurte grego + morangos + chia 🍓','proteína dupla + antioxidantes + saciedade por horas.','peixe grelhado + abobrinha refogada + batata doce','ômega-3 + vegetal que desinfla + energia gradual.','1 banana + amêndoas 🍌','potássio contra retenção + vitamina E anti-inflamatória.','frango desfiado + couve refogada no alho','proteína leve + ferro + alho que trabalha durante o sono.'],['DIA 3','omelete com tomate + chá verde 🍵','licopeno antioxidante + termogênico natural.','atum + salada de folhas verdes + cenoura + azeite','proteína + desintoxicação + betacaroteno.','abacate amassado com limão 🥑','gordura boa + vitamina C que sacia e desinfla.','peixe assado + brócolis + fio de azeite','proteína leve + sulforafano que combate inflamação.'],['DIA 4','2 ovos cozidos + fruta vermelha + água com gengibre','proteína + antocianinas anti-inflamatórias + termogênico.','frango grelhado + quinoa + legumes coloridos 🌈','proteína + todos os aminoácidos + variedade de antioxidantes.','iogurte grego com canela 🍯','sacia + regula açúcar + elimina vontade de doce.','omelete de couve + salada de pepino','cálcio para sono profundo + diurético natural.'],['DIA 5','iogurte grego + mirtilo + chia 🫐','anti-inflamatório poderoso + saciedade prolongada.','peixe grelhado + arroz integral + espinafre refogado','proteína + carboidrato complexo + ferro potencializado.','castanhas + 1 maçã 🥜','selênio que regula tireoide + fibra para o intestino.','frango desfiado + abobrinha grelhada + azeite','digestão fácil + desinfla e sacia.'],['DIA 6','ovos mexidos com cúrcuma + chá verde ✨','curcumina age no inchaço abdominal + termogênico.','atum + batata doce + salada verde','zinco que regula hormônios + potássio que elimina inchaço.','abacate com limão e chia 🥑','gordura boa + fibra + vitamina C que desinfla.','peixe assado + brócolis no vapor','ômega-3 + sulforafano que age durante o sono.'],['DIA 7 ⭐','omelete com espinafre + água com limão e gengibre','proteína + ferro + termogênico para completar a semana.','frango grelhado + quinoa + legumes coloridos 🌈','repõe aminoácidos gastos + prepara para a Semana 2.','iogurte grego com morango 🍓','colágeno + equilibra intestino para próxima semana.','ovos cozidos + salada de folhas verdes + azeite','refeição leve para reset completo durante a noite.']];
+const s2=[['DIA 8 🔥','ovos mexidos com cúrcuma + abacate + chá verde','cúrcuma com gordura maximiza a absorção da curcumina.','frango grelhado + batata doce + brócolis','proteína + carboidrato complexo + fibra para acelerar metabolismo.','iogurte grego com canela e mirtilo 🫐','regula açúcar + combate inflamação.','peixe grelhado + espinafre refogado + azeite','ômega-3 + ferro + queima de gordura durante o sono.'],['DIA 9','omelete com tomate e cúrcuma + água com gengibre','gengibre em jejum acelera o metabolismo em minutos.','atum + quinoa + salada de folhas verdes + azeite','todos os aminoácidos essenciais numa só refeição.','castanhas + 1 maçã 🥜','selênio que regula tireoide + fibra para o intestino.','frango desfiado + abobrinha grelhada + azeite','proteína magra garante queima noturna.'],['DIA 10','iogurte grego + morango + chia + canela 🍓','elágico que bloqueia enzimas que acumulam gordura.','peixe assado + batata doce + couve refogada','alimenta bactérias boas do intestino + desintoxica o fígado.','abacate com limão e chia 🥑','gordura boa + fibra + vitamina C que potencializa absorção.','omelete de espinafre + salada de pepino + azeite','magnésio para sono profundo + diurético que elimina sódio.'],['DIA 11','2 ovos cozidos + abacate + chá verde com gengibre 💚','combinação termogênica mais poderosa da manhã.','frango grelhado + arroz integral + legumes coloridos 🌈','silício para elasticidade da pele + variedade de antioxidantes.','iogurte grego com mirtilo 🫐','pterostilbeno que ativa genes da queima de gordura.','peixe assado + brócolis + azeite','equilibra hormônios femininos e reduz gordura abdominal.'],['DIA 12','omelete com couve e tomate + água com limão e cúrcuma','anti-inflamatório mais eficiente do protocolo em jejum.','atum + quinoa + cenoura + azeite 🥕','betacaroteno para saúde hormonal + proteína completa.','castanhas + fruta vermelha 🍒','antocianinas que melhoram circulação + selênio.','frango desfiado + espinafre refogado no alho','alicina reduz cortisol noturno = mais queima durante o sono.'],['DIA 13','iogurte grego + morango + chia + fio de mel puro 🍯','mel puro ativa o fígado sem causar pico de insulina.','peixe grelhado + batata doce + abobrinha refogada','energia para o treino + vegetal 95% água que desinfla.','abacate com limão e sementes de chia 🥑','ômega-3 vegetal que potencializa o ômega-3 do peixe.','omelete de couve + salada de folhas verdes + azeite','queima gordura sem interrupção a noite toda.'],['DIA 14 ⭐','ovos mexidos com cúrcuma e espinafre + chá verde','proteína + ferro + anti-inflamatório + termogênico — o mais poderoso da semana.','frango grelhado + quinoa + legumes coloridos + azeite 🌈','repõe aminoácidos gastos + prepara para a Fase 3.','iogurte grego com mirtilo e canela 🫐','regula açúcar + entra na semana final sem compulsão.','peixe assado + brócolis + fio de azeite','cria o ambiente interno perfeito para a Coroação.']];
+const s3=[['DIA 15 👑','ovos mexidos com cúrcuma + abacate + água com limão e gengibre','cúrcuma com abacate no nível máximo + metabolismo mais alto já alcançado.','peixe grelhado + quinoa + brócolis + azeite','proteína em dose dupla + sulforafano na gordura abdominal.','iogurte grego com mirtilo e canela 🫐','antioxidantes que combatem inflamação residual.','frango desfiado + espinafre refogado no alho + azeite','cortisol baixo + magnésio para sono profundo.'],['DIA 16','omelete com espinafre e tomate + chá verde com gengibre 💚','efeito termogênico acumulado — queima máxima.','frango grelhado + batata doce + couve refogada + azeite','detox final + energia para o treino mais intenso.','castanhas + morango 🍓','colágeno que firma a pele + selênio no metabolismo máximo.','peixe assado + abobrinha grelhada + azeite','proteína magra que define durante o sono.'],['DIA 17','iogurte grego + framboesa + chia + canela 🍇','cetona natural + chia absorve o último líquido retido.','atum + quinoa + salada colorida + azeite 🌈','zinco que equilibra hormônios que regulam a queima.','abacate com limão e sementes de chia 🥑','potássio que elimina sódio residual — último inchaço.','omelete de couve + salada de pepino + azeite','diurético final que revela a silhueta em 17 dias.'],['DIA 18','2 ovos cozidos + abacate + água com limão cúrcuma e gengibre ✨','combinação tripla — termogênico mais poderoso do protocolo.','peixe grelhado + arroz integral + brócolis + azeite','silício que melhora elasticidade da pele durante a definição.','iogurte grego com morango e mel puro 🍓','enzimas + vitamina C que sela o colágeno das 3 semanas.','frango desfiado + espinafre + azeite','magnésio e gordura boa que induzem sono e queima máxima.'],['DIA 19','omelete com tomate e cúrcuma + chá verde com limão 🍵','catequinas acumuladas — queima muito mais eficiente.','frango grelhado + quinoa + legumes coloridos + azeite 🌈','proteína completa dois dias antes do fim.','castanhas + mirtilo 🫐','combinação anti-inflamatória final antes do Dia 21.','peixe assado + couve refogada + azeite','último detox hepático do protocolo.'],['DIA 20 🌟','iogurte grego + framboesa + mirtilo + chia 🫐','maior concentração de antioxidantes de todo o cardápio.','atum + batata doce + brócolis + azeite','energia para o penúltimo treino + sulforafano em dose máxima.','abacate com limão e chia 🥑','potássio final — revelando a silhueta antes da foto.','frango grelhado + espinafre + salada de pepino + azeite','proteína + magnésio + diurético no último sono completo.'],['DIA 21 — A COROAÇÃO 👑✨','ovos mexidos com cúrcuma e espinafre + água com limão gengibre e cúrcuma','cúrcuma dupla — efeito máximo no seu dia de coroação.','peixe grelhado + quinoa + legumes coloridos + azeite 🌈','o almoço mais nutritivo de todos — encerramento perfeito.','iogurte grego com morango mirtilo e mel puro 🍓','celebração nutricional. Você merece. 🎉','peixe assado + brócolis no vapor + azeite','em 21 dias você construiu um novo relacionamento com a comida.']];
+const receitas=[['Água Imperial 💧','A bebida que turbina tudo','1 litro de água · suco de 1 limão · 1 col. cúrcuma · gengibre ralado · 1 pitada de pimenta preta','Misture em uma garrafa e beba pela manhã em jejum. A pimenta preta aumenta a absorção da cúrcuma em 2000%.','Ativa o metabolismo, desintoxica o fígado e elimina o inchaço — tudo antes do café da manhã.'],['Omelete Imperial 🍳','A proteína que define','3 ovos · 1 punhado de espinafre · 1 tomate · 1 pitada de cúrcuma · sal e azeite','Bata os ovos com a cúrcuma. Refogue espinafre e tomate no azeite 2 min. Despeje e cozinhe em fogo baixo.','Proteína completa + ferro + anti-inflamatório numa refeição de 10 minutos.'],['Bowl da Diva 🥗','O almoço perfeito','Frango desfiado · 3 col. quinoa · brócolis · cenoura ralada · tomate cereja · azeite + limão','Monte tudo numa tigela. Regue com azeite e limão. Sirva frio ou quente.','Proteína completa, carboidrato inteligente e variedade máxima de antioxidantes.'],['Chá da Coroação 👑','A bebida noturna que queima gordura','1 xícara de água quente · gengibre fresco · 1 pau de canela · limão · 1 col. mel puro','Ferva água com gengibre e canela por 5 min. Coe, adicione limão e mel. Beba 30 min antes de dormir.','Efeito termogênico noturno — o corpo queima gordura enquanto você dorme. 🌙'],['Vitamina Anti-Inflamatória ⚡','O lanche que desinfla em horas','1 banana congelada · 1 xícara de mirtilo 🫐 · 1 col. chia · 1 pitada de cúrcuma · 200ml água de coco','Bata tudo no liquidificador até ficar cremoso. Beba imediatamente.','Mirtilo com cúrcuma e canela — a combinação anti-inflamatória mais poderosa do protocolo.'],['Salada Imperial 🥗','A refeição que revela a silhueta','Folhas verdes · pepino · tomate cereja · abacate · atum ou frango · chia · azeite + limão','Misture tudo. Regue com azeite e limão. Finalize com chia e pimenta preta.','Pepino + abacate + chia — triplo efeito diurético, saciante e anti-inflamatório.'],['Peixe da Coroação 👑','O jantar que sela a transformação','1 filé de peixe branco · limão · 1 dente de alho · 1 col. cúrcuma · azeite · brócolis no vapor','Tempere, marine 10 min, grelhe 4 min de cada lado. Sirva com brócolis no vapor.','Ômega-3 + alicina do alho + curcumina — o trio anti-inflamatório mais poderoso.']];
+return`<div class="tabs"><button class="tab on" data-g="c" data-t="ali">⚔️ Alimentos</button><button class="tab" data-g="c" data-t="s1">🌱 Semana 1</button><button class="tab" data-g="c" data-t="s2">🔥 Semana 2</button><button class="tab" data-g="c" data-t="s3">👑 Semana 3</button><button class="tab" data-g="c" data-t="rec">⚡ Receitas</button></div>
+<div class="tc on" data-g="c" data-t="ali"><div class="quote"><p>A maioria das mulheres não engorda por falta de força de vontade. Engorda por inflamação. 💜</p></div><div class="divider"></div><div class="ali-grid"><div class="ali c"><h4>✅ Coma à Vontade</h4><ul><li>🍗 Frango, peixe, atum, ovos, iogurte grego</li><li>🥦 Brócolis, espinafre, couve, abobrinha</li><li>🥒 Pepino, tomate, cenoura</li><li>🫐 Morango, mirtilo, limão, maçã, abacate</li><li>🥑 Azeite, castanhas, amêndoas, chia</li><li>✨ Cúrcuma, gengibre, canela, alho</li><li>💧 Água, chá verde, chá de gengibre</li></ul></div><div class="ali e"><h4>❌ Evite</h4><ul><li>🍬 Açúcar refinado e adoçantes</li><li>🍞 Farinha branca — pão, macarrão</li><li>🍟 Frituras e gordura trans</li><li>🥤 Refrigerante e suco industrializado</li><li>🌭 Embutidos — salsicha, presunto</li><li>🍺 Álcool</li><li>🧀 Leite integral e queijos gordurosos</li></ul></div></div></div>
+<div class="tc" data-g="c" data-t="s1"><p style="font-size:.78rem;color:var(--w3);margin-bottom:1.3rem">🌱 Foco: desinchar, desintoxicar e acordar o metabolismo.</p>${s1.map(dayCard).join('')}</div>
+<div class="tc" data-g="c" data-t="s2"><p style="font-size:.78rem;color:var(--w3);margin-bottom:1.3rem">🔥 Foco: acelerar o metabolismo, queimar gordura e definir a cintura.</p>${s2.map(dayCard).join('')}</div>
+<div class="tc" data-g="c" data-t="s3"><p style="font-size:.78rem;color:var(--w3);margin-bottom:1.3rem">👑 Foco: definir, firmar e selar a transformação para sempre.</p>${s3.map(dayCard).join('')}</div>
+<div class="tc" data-g="c" data-t="rec"><div class="sh" style="margin-bottom:1.3rem">⚡ 7 Receitas que Turbinam a Transformação</div>${receitas.map(([n,tag,ing,como,pq])=>`<div class="recipe"><div class="rname">${n}</div><div class="rtag">${tag}</div><div class="rsl">Ingredientes</div><p>${ing}</p><div class="rsl">Como fazer</div><p>${como}</p><div class="rwhy">Por quê turbina: ${pq}</div></div>`).join('')}</div>`}
+
+function train(){return`<div class="tabs"><button class="tab on" data-g="t" data-t="r">⚔️ Regras</button><button class="tab" data-g="t" data-t="s1">🌱 Semana 1</button><button class="tab" data-g="t" data-t="s2">🔥 Semana 2</button><button class="tab" data-g="t" data-t="s3">👑 Semana 3</button></div>
+<div class="tc on" data-g="t" data-t="r"><div class="quote"><p>Você não precisa de academia para ter o corpo que quer. Seu corpo é o melhor equipamento que existe. 💪</p></div><div class="divider"></div><div class="sh">As 7 Regras do Treino Imperial</div>${[['Aqueça Sempre 🔥','Nunca comece sem 3 minutos de aquecimento. Corpo frio não queima — corpo aquecido sim.'],['Qualidade Antes de Quantidade ✅','10 repetições certas valem mais que 30 erradas. Sinta o músculo certo.'],['Respire 🧘‍♀️','Expire no esforço, inspire no retorno. Respiração errada reduz o resultado em até 30%.'],['Respeite o Descanso 😴','Os dias de descanso são onde o corpo se regenera e queima gordura.'],['Hidrate Durante 💧','Beba água antes, durante e depois. Músculo desidratado queima menos gordura.'],['Progrida Sempre 📈','A cada semana o treino aumenta. Seu corpo precisa do novo desafio.'],['Confie no Processo 💜','Quando fica difícil é exatamente onde a transformação acontece.']].map(([t,b])=>`<div class="rule"><div class="rule-t">${t}</div><div class="rule-b">${b}</div></div>`).join('')}</div>
+<div class="tc" data-g="t" data-t="s1"><div class="tw-h"><div class="tw-l">Semana 1</div><div class="tw-t">Reset 🌱</div><div class="tw-d">Nível Fácil · Ativação e Adaptação · 15 minutos</div></div>${cal([['Segunda','👑 Treino Imperial'],['Terça','♀️ Treino Vênus'],['Quarta','😴 Descanso'],['Quinta','👑 Treino Imperial'],['Sexta','♀️ Treino Vênus'],['Sábado','😴 Descanso'],['Domingo','😴 Descanso']])}<div class="tn-name">👑 Treino Imperial</div><div class="tn-sub">Segunda e Quinta · Corpo todo · 15 min · 2 voltas</div><div class="aq"><div class="aq-t">🔥 Aquecimento — 3 min</div><p>Caminhada no lugar 1 min · Rotação dos ombros 30s · Agachamento leve 10 rep</p></div>${ex('1. Agachamento Básico 🏋️‍♀️','15 repetições','Pés na largura dos ombros, desça como se fosse sentar, joelhos não ultrapassam os pés, suba expirando.','Glúteos e coxas','30 segundos')}${ex('2. Flexão de Joelho 💪','10 repetições','Mãos no chão, joelhos apoiados, desça o peito até quase tocar, suba expirando.','Peito, ombros e tríceps','30 segundos')}${ex('3. Elevação de Quadril 🍑','15 repetições','Deitada, joelhos dobrados, suba o quadril espremendo o glúteo no topo, segure 2s, desça.','Glúteos e lombar','30 segundos')}${ex('4. Prancha Estática 🧱','20 segundos','Apoio nos antebraços e pontas dos pés, corpo reto, quadril não cai.','Abdômen e core','30 segundos')}${ex('5. Polichinelo ⚡','30 segundos','Pule abrindo pernas e braços ao mesmo tempo, aterrisse suave.','Cardio e queima','30 segundos')}<div class="tn-name">♀️ Treino Vênus</div><div class="tn-sub">Terça e Sexta · Abdômen, cintura e cardio · 15 min · 2 voltas</div><div class="aq"><div class="aq-t">🔥 Aquecimento — 3 min</div><p>Caminhada no lugar 1 min · Rotação do tronco 30s cada lado · Elevação de joelhos 20 rep</p></div>${ex('1. Abdominal Básico 💪','15 repetições','Deitada, joelhos dobrados, mãos atrás da cabeça, suba apenas as escápulas expirando.','Abdômen superior','30 segundos')}${ex('2. Abdominal Bicicleta 🚴‍♀️','20 repetições alternadas','Deitada, pernas levantadas, simule pedalada levando cotovelo ao joelho oposto.','Abdômen e cintura','30 segundos')}${ex('3. Elevação de Pernas ⬆️','12 repetições','Deitada, pernas retas, suba até 90° e desça devagar sem encostar no chão.','Abdômen inferior','30 segundos')}${ex('4. Agachamento Lateral 🏋️‍♀️','10 repetições cada lado','Passo largo para o lado, agache nessa perna, volte ao centro.','Glúteos e face interna da coxa','30 segundos')}${ex('5. Jumping Jack Lento ⚡','30 segundos','Abra e feche pernas e braços no ritmo de um agachamento — sem pular.','Cardio leve e ativação total','30 segundos')}</div>
+<div class="tc" data-g="t" data-t="s2"><div class="tw-h"><div class="tw-l">Semana 2</div><div class="tw-t">Transformação 🔥</div><div class="tw-d">Nível Médio · Queima e Definição · 20 minutos</div></div>${cal([['Segunda','👑 Treino Imperial'],['Terça','♀️ Treino Vênus'],['Quarta','🌹 Treino Rainha'],['Quinta','👑 Treino Imperial'],['Sexta','♀️ Treino Vênus'],['Sábado','🌹 Treino Rainha'],['Domingo','😴 Descanso']])}<div class="tn-name">👑 Treino Imperial</div><div class="tn-sub">Segunda e Quinta · Glúteos, coxas e queima · 20 min · 3 voltas</div>${ex('1. Agachamento Sumô 🏋️‍♀️','20 repetições','Pés mais abertos, pontas dos pés para fora, desça profundo, suba espremendo o glúteo.','Glúteos, face interna e quadríceps','20 segundos')}${ex('2. Avanço Alternado 🦵','12 repetições cada perna','Passo largo para frente, desça o joelho de trás até quase tocar, volte e alterne.','Glúteos, coxas e equilíbrio','20 segundos')}${ex('3. Elevação de Quadril com Pausa 🍑','15 repetições','Igual à Semana 1 mas segure 3 segundos no topo espremendo ao máximo.','Glúteos e lombar','20 segundos')}${ex('4. Prancha com Toque no Ombro 💪','20 repetições alternadas','Prancha alta, leve uma mão ao ombro oposto mantendo o quadril estável.','Abdômen, core e estabilidade','20 segundos')}${ex('5. Burpee Modificado ⚡','10 repetições','Agache, mãos no chão, jogue pés para trás, volte, levante e salte.','Corpo todo e queima máxima','30 segundos')}<div class="tn-name">♀️ Treino Vênus</div><div class="tn-sub">Terça e Sexta · Abdômen, cintura e cardio médio · 20 min · 3 voltas</div>${ex('1. Abdominal com Rotação 🌀','20 repetições alternadas','Deitada, suba torcendo o tronco levando o cotovelo ao joelho oposto.','Abdômen e cintura','20 segundos')}${ex('2. Prancha Lateral ⬛','20 segundos cada lado','Apoio no antebraço lateral, corpo reto, quadril levantado.','Oblíquos e cintura','20 segundos')}${ex('3. Tesoura ✂️','20 repetições alternadas','Deitada, pernas retas a 45°, alterne subindo e descendo.','Abdômen inferior e coxas','20 segundos')}${ex('4. Mountain Climber 🏔️','30 segundos','Prancha alta, leve joelhos alternados ao peito o mais rápido possível.','Abdômen, cardio e queima','20 segundos')}${ex('5. Agachamento com Salto 🦘','12 repetições','Agache e ao subir salte com os braços para cima, aterrisse suave.','Coxas, glúteos e cardio','30 segundos')}<div class="tn-name">🌹 Treino Rainha</div><div class="tn-sub">Quarta e Sábado · Corpo todo e resistência · 20 min · 3 voltas</div>${ex('1. Flexão Completa 💪','12 repetições','Mãos no chão, corpo reto, desça o peito até quase tocar, suba expirando.','Peito, ombros, tríceps e core','20 segundos')}${ex('2. Agachamento com Chute Lateral 🦵','12 repetições cada lado','Agache e ao subir chute lateralmente com uma perna, alterne.','Glúteos, coxas e equilíbrio','20 segundos')}${ex('3. Superman 🦸‍♀️','15 repetições','Deitada de bruços, levante braços e pernas ao mesmo tempo, segure 2s.','Lombar, glúteos e postura','20 segundos')}${ex('4. Prancha com Elevação de Perna 🏋️‍♀️','10 repetições cada perna','Prancha nos antebraços, levante uma perna de cada vez.','Glúteos e core','20 segundos')}${ex('5. Corrida Estacionária 🏃‍♀️','45 segundos','Corra no lugar levantando os joelhos o mais alto possível.','Cardio e queima máxima','30 segundos')}</div>
+<div class="tc" data-g="t" data-t="s3"><div class="tw-h"><div class="tw-l">Semana 3</div><div class="tw-t">Coroação 👑</div><div class="tw-d">Nível Médio-Difícil · Definição e Selagem · 25 minutos</div></div>${cal([['Segunda','👑 Treino Imperial'],['Terça','♀️ Treino Vênus'],['Quarta','🌹 Treino Rainha'],['Quinta','👑 Treino Imperial'],['Sexta','♀️ Treino Vênus'],['Sábado','🌹 Treino Rainha'],['Domingo','😴 Descanso']])}<div class="tn-name">👑 Treino Imperial</div><div class="tn-sub">Segunda e Quinta · Glúteos, coxas e queima máxima · 25 min · 4 voltas</div>${ex('1. Agachamento Sumô com Pausa 🏋️‍♀️','20 repetições','Desça profundo, segure 3s na posição mais baixa, suba explosivo espremendo o glúteo.','Glúteos profundos e face interna da coxa','15 segundos')}${ex('2. Avanço com Salto 🦘','10 repetições cada perna','Avanço normal mas ao subir salte trocando a perna no ar. Aterrisse suave.','Glúteos, coxas e cardio','15 segundos')}${ex('3. Elevação de Quadril Unilateral 🍑','12 repetições cada perna','Deitada, uma perna no ar, suba o quadril usando apenas a perna apoiada.','Glúteo isolado e lombar','15 segundos')}${ex('4. Prancha com Mountain Climber 🏔️','30 segundos','Prancha alta, alterne joelhos ao peito em ritmo rápido.','Abdômen, core e queima total','15 segundos')}${ex('5. Burpee Completo ⚡','12 repetições','Agache, mãos no chão, jogue os pés, faça uma flexão, volte, salte alto.','Corpo todo e queima máxima','20 segundos')}<div class="tn-name">♀️ Treino Vênus</div><div class="tn-sub">Terça e Sexta · Abdômen, cintura e cardio intenso · 25 min · 4 voltas</div>${ex('1. Abdominal com Rotação e Extensão 🌀','20 repetições alternadas','Suba torcendo e estenda a perna oposta reta no ar ao mesmo tempo.','Abdômen completo e cintura','15 segundos')}${ex('2. Prancha Lateral com Elevação 💪','12 repetições cada lado','Prancha lateral, quadril desce levemente e sobe explosivo.','Oblíquos e cintura','15 segundos')}${ex('3. Tesoura com Rotação ✂️','20 repetições alternadas','Tesoura normal mais rotação do tronco para o lado da perna que sobe.','Abdômen inferior e oblíquos','15 segundos')}${ex('4. Mountain Climber Cruzado 🏔️','40 segundos','Joelho direito ao cotovelo esquerdo e vice-versa alternando rápido.','Cintura, oblíquos e cardio intenso','15 segundos')}${ex('5. Agachamento com Salto e Rotação 🌀','12 repetições','Agache, salte e gire 180° no ar, aterrisse em agachamento.','Coxas, glúteos e cardio máximo','20 segundos')}<div class="tn-name">🌹 Treino Rainha</div><div class="tn-sub">Quarta e Sábado · Corpo todo e definição final · 25 min · 4 voltas</div>${ex('1. Flexão com Elevação de Quadril 💪','10 repetições','Faça uma flexão e ao subir eleve o quadril formando um V invertido.','Peito, ombros, tríceps e core','15 segundos')}${ex('2. Agachamento com Chute Frontal 🦵','12 repetições cada perna','Agache e ao subir chute com força para frente, alterne.','Glúteos, coxas e equilíbrio','15 segundos')}${ex('3. Superman com Pausa 🦸‍♀️','15 repetições','Levante braços e pernas ao mesmo tempo, segure 3s contraindo tudo.','Lombar, glúteos e postura','15 segundos')}${ex('4. Prancha com Elevação Alternada 🏋️‍♀️','10 repetições cada lado','Prancha alta, estenda braço direito e perna esquerda simultaneamente.','Core completo, glúteos e estabilidade','15 segundos')}${ex('5. Tabata Final — Burpee Completo 🔥','4 minutos (20s esforço + 10s descanso)','Dê o máximo em cada intervalo. Esse é o encerramento da sua transformação.','Corpo todo e queima máxima final','Recuperação total')}<div class="quote" style="margin-top:2rem"><p>👑 Você completou os 21 dias. Sua coroa está merecida. ✨🎉</p></div></div>`}
+
+/* ════════════════════════════════
+   COSMIC CANVAS — Stars + Nebula
+════════════════════════════════ */
+(function(){
+const cv=document.getElementById('cosmos');
+const ctx=cv.getContext('2d');
+let W,H,stars=[],nebulas=[];
+
+function resize(){
+  W=cv.width=window.innerWidth;
+  H=cv.height=window.innerHeight;
+  stars=[];nebulas=[];
+  // Stars
+  for(let i=0;i<200;i++){
+    stars.push({
+      x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*1.8+.2,
+      vx:(Math.random()-.5)*.15,
+      vy:Math.random()*.4+.1,
+      opacity:Math.random()*.8+.2,
+      pulse:Math.random()*Math.PI*2,
+      pulseSpeed:Math.random()*.02+.005,
+      color:Math.random()>.5?'#60A5FA':'#A78BFA',
+      twinkle:Math.random()>.7
+    });
+  }
+  // Nebula clouds
+  for(let i=0;i<6;i++){
+    nebulas.push({
+      x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*200+100,
+      color:Math.random()>.5?'rgba(139,92,246,':'rgba(59,130,246,',
+      opacity:Math.random()*.06+.02,
+      vx:(Math.random()-.5)*.05,
+      vy:(Math.random()-.5)*.05
+    });
+  }
+}
+
+resize();
+window.addEventListener('resize',resize);
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // Background gradient
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#04020F');
+  bg.addColorStop(.5,'#080418');
+  bg.addColorStop(1,'#0D0626');
+  ctx.fillStyle=bg;
+  ctx.fillRect(0,0,W,H);
+
+  // Nebulas
+  nebulas.forEach(n=>{
+    const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+    g.addColorStop(0,n.color+n.opacity+')');
+    g.addColorStop(1,n.color+'0)');
+    ctx.fillStyle=g;
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<-n.r)n.x=W+n.r;if(n.x>W+n.r)n.x=-n.r;
+    if(n.y<-n.r)n.y=H+n.r;if(n.y>H+n.r)n.y=-n.r;
+  });
+
+  // Stars
+  stars.forEach(s=>{
+    s.pulse+=s.pulseSpeed;
+    const alpha=s.twinkle?s.opacity*(0.5+0.5*Math.sin(s.pulse)):s.opacity;
+
+    // Glow
+    if(s.r>1){
+      const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*4);
+      g.addColorStop(0,s.color.replace(')',`,${alpha*.4})`).replace('#','rgba(').replace(/([0-9a-f]{2})/gi,(m)=>parseInt(m,16)+',').slice(0,-1));
+      // simpler:
+      ctx.save();ctx.globalAlpha=alpha*.3;ctx.fillStyle=s.color;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r*3,0,Math.PI*2);ctx.fill();
+      ctx.restore();
+    }
+
+    // Core
+    ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=s.color;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+
+    // Move (falling)
+    s.y+=s.vy;s.x+=s.vx;
+    if(s.y>H+5){s.y=-5;s.x=Math.random()*W}
+    if(s.x<-5)s.x=W+5;if(s.x>W+5)s.x=-5;
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+})();
+</script>
+</body>
+</html>
+```
